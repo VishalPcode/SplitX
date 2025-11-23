@@ -1,13 +1,17 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import swaggerRouter  from "./swagger.js";
+// import { swaggerUiMiddleware, swaggerSpec } from "./swagger.js";
+
+
 
 const app = express();
 
 // CORS middleware
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*", // use your env variable
+    origin: "http://localhost:8000", // Allow Swagger UI origin
     credentials: true,
   })
 );
@@ -22,6 +26,10 @@ app.use(cookieParser());
 // Routes
 import userRouter from "./routes/user.routes.js";
 app.use("/api/v1/users", userRouter);
+app.use("/api-docs", swaggerRouter);
+console.log("Swagger Loaded");
+// app.use("/api-docs", swaggerUiMiddleware.serve, swaggerUiMiddleware.setup(swaggerSpec));
+
 
 // Global Error Handler — ALWAYS LAST!
 app.use((err, req, res, next) => {

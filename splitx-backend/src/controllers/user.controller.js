@@ -20,15 +20,17 @@ const ganerateAccessAndRefreshTokens = async (userId) => {
   }
 };
 
-
 const registerUser = asyncHandler(async (req, res) => {
-    console.log("REQ BODY:", req.body);
+  console.log("REQ BODY:", req.body);
 
   const { fullName, email, password, username, phoneNumber } = req.body;
 
-
   // 1. Validate required fields
-  if ([fullName, email, password, username, phoneNumber].some((field) => !field?.trim())) {
+  if (
+    [fullName, email, password, username, phoneNumber].some(
+      (field) => !field?.trim()
+    )
+  ) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -118,5 +120,27 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
+const logoutUser = asyncHandler(async (req, res) => {
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, "User logged out successfully"));
+});
 
-export { registerUser , loginUser };
+export { registerUser, loginUser, logoutUser };

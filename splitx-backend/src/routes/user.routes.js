@@ -1,12 +1,19 @@
 import { Router } from "express";
-import { registerUser, loginUser } from "../controllers/user.controller.js";
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+} from "../controllers/user.controller.js";
+import { verifyJWT } from "../middleware/auth.middleware.js";
+
 
 const router = Router();
 
-import { verifyJWT } from "../middleware/auth.middleware.js";
 
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
+//secure Routes
+router.route("/logout").post(verifyJWT, logoutUser);
 
 
 /**
@@ -73,8 +80,19 @@ router.route("/login").post(loginUser);
  *         description: Bad request
  *       404:
  *         description: User does not exist
+ */
+/** * @swagger
+ * /users/logout:
+ *   post:
+ *     summary: Logout a user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *       401:
+ *         description: Unauthorized
  */ 
-
-
 
 export default router;

@@ -7,10 +7,11 @@ const app = express();
 // CORS middleware
 app.use(
   cors({
-    origin: process.env.PORT,
+    origin: process.env.CORS_ORIGIN || "*", // use your env variable
     credentials: true,
   })
 );
+
 
 // Core middlewares
 app.use(express.json({ limit: "16kb" }));

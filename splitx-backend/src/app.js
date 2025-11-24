@@ -8,10 +8,14 @@ import swaggerRouter  from "./swagger.js";
 
 const app = express();
 
-// CORS middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:8000", // swagger
+];
+
 app.use(
   cors({
-    origin: "http://localhost:8000", // Allow Swagger UI origin
+    origin: allowedOrigins,
     credentials: true,
   })
 );
